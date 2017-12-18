@@ -1,0 +1,120 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+body {
+    background: #f4f6f9; /*light gray*/
+    transition: background 2.5s, color 1.0s;
+    color: black;
+}
+body.typing {
+    background: #f4f6f9; /*light gray*/
+    background: #FFEB3C; /*google yellow*/
+    background: #303338; /*dark gray*/
+    background: #3F51B5; /*google blue*/
+    background: #05193a; /*dark blue*/
+    
+    color: white; /*this is text color*/
+}
+.logo {
+    margin: 20px 15px;
+    width: 100px;
+    text-align: center;
+    font-family: 'Oleo Script', cursive;
+    color: gray;
+    font-size: 30px;
+    transition: opacity 0.5s;
+}
+.logo.typing {opacity: 0;}
+.letter {
+    font-family: 'Roboto Slab';
+    font-family: 'Alegreya Sans', sans-serif;
+    font-size: 1.5em;
+    margin: 100px auto;
+    width: 50%;
+    transition: font-weight 0.5s, font-size 0.3s;
+}
+
+.letter.typing {
+    font-weight: 500;
+}
+
+
+/*--------------------------------------Details (location and clock)--------------------------*/
+.details {
+    position: fixed;
+    opacity: 0;
+    transition: color 0s, opacity 1.0s; 
+}
+.details.typing {opacity: 1;}
+.location {
+    font-family: 'Kaushan Script', cursive;
+    top: 20px;
+    left: 20px;
+}
+.time {
+    top: 20px;
+    right: 20px;
+    font-family: 'Kaushan Script', cursive;
+    font-size: 2em;
+}
+/*------------------------------------------------------------------------------------------*/
+
+
+
+/*---------------everything below is related to the "open" button and the border animation------------------*/
+.wrapper {
+    width: 194px;
+    height: 120px;
+    position: absolute;
+    right: 0px;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    margin: auto;
+}
+
+.start {
+    position: relative;
+    font-size: 1.5em;
+    text-align: center;
+    font-family: 'Kaushan Script', cursive;
+    cursor: pointer;
+    padding-top: 35px;
+    padding-bottom: 40px;
+    transition: 1.2s; /*this transition is always looking for change*/
+    -webkit-transition: 1.2s;
+}
+.start:hover {
+    border: 2px solid rgba(0,160,80,0);
+    background: #05193a;
+    color: white;
+}
+.start::before, .start::after {
+  width: 100%;
+  height:100%;
+  z-index: 3;
+  content:'';
+  position: absolute;
+  top:0;
+  left:0;
+  box-sizing: border-box;
+  -webkit-transform: scale(0);
+  transition: 1s;
+}
+.foo::before {
+  border-bottom: 3px solid #FFF;
+  border-left: 3px solid #FFF;
+  -webkit-transform-origin: 0 100%;
+}
+.foo::after {
+  border-top: 3px solid #FFF;
+  border-right: 3px solid #FFF;
+  -webkit-transform-origin: 100% 0%;
+}
+
+.start:hover::after, .start:hover::before {
+  -webkit-transform: scale(1);
+}
+/*-------------------------------------------------------------------------------------------------------*/
