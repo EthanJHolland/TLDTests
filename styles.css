@@ -13,23 +13,22 @@ body.typing {
     background: #FFEB3C; /*google yellow*/
     background: #303338; /*dark gray*/
     background: #3F51B5; /*google blue*/
-    background: #05193a; /*dark blue*/
     
     color: white; /*this is text color*/
 }
 .logo {
-    margin: 20px 15px;
-    width: 100px;
+    margin: 14px 6px;
+    width: 140px;
     text-align: center;
     font-family: 'Oleo Script', cursive;
+    letter-spacing: -1.5px;
     color: gray;
-    font-size: 30px;
+    opacity: 0.6;
     transition: opacity 0.5s;
 }
 .logo.typing {opacity: 0;}
 .letter {
     font-family: 'Roboto Slab';
-    font-family: 'Alegreya Sans', sans-serif;
     font-size: 1.5em;
     margin: 100px auto;
     width: 50%;
@@ -49,16 +48,34 @@ body.typing {
 }
 .details.typing {opacity: 1;}
 .location {
-    font-family: 'Kaushan Script', cursive;
+    font-family: 'Roboto Slab';
     top: 20px;
     left: 20px;
 }
 .time {
     top: 20px;
     right: 20px;
-    font-family: 'Kaushan Script', cursive;
-    font-size: 2em;
+    font-family: 'Roboto Slab';
 }
+
+.write {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    transition: all 0.5s;
+}
+.write.typing {visibility: hidden;}
+
+img {
+    width: 30px;
+    height: 30px;
+    opacity: 0.7;
+}
+
+img:hover {
+    opacity: 1;
+}
+
 /*------------------------------------------------------------------------------------------*/
 
 
@@ -77,18 +94,18 @@ body.typing {
 
 .start {
     position: relative;
-    font-size: 1.5em;
+    font-size: 1.2em;
     text-align: center;
-    font-family: 'Kaushan Script', cursive;
+    font-family: 'Roboto Slab';
     cursor: pointer;
     padding-top: 35px;
     padding-bottom: 40px;
-    transition: 1.2s; /*this transition is always looking for change*/
-    -webkit-transition: 1.2s;
+    transition: 0.6s; /*this transition is always looking for change*/
+    -webkit-transition: 0.6s;
 }
 .start:hover {
-    border: 2px solid rgba(0,160,80,0);
-    background: #05193a;
+    border: 1.5px solid rgba(0,160,80,0);
+    background: #3F51B5;
     color: white;
 }
 .start::before, .start::after {
@@ -101,17 +118,18 @@ body.typing {
   left:0;
   box-sizing: border-box;
   -webkit-transform: scale(0);
-  transition: 1s;
+  transition: 0.5s;
 }
 .foo::before {
-  border-bottom: 3px solid #FFF;
-  border-left: 3px solid #FFF;
-  -webkit-transform-origin: 0 100%;
-}
-.foo::after {
-  border-top: 3px solid #FFF;
-  border-right: 3px solid #FFF;
+  border-bottom: 1px solid #FFF;
+  border-left: 1px solid #FFF;
   -webkit-transform-origin: 100% 0%;
+}
+
+.foo::after {
+  border-top: 1.5px solid #FFF;
+  border-right: 1.5px solid #FFF;
+  -webkit-transform-origin: 0% 100%;
 }
 
 .start:hover::after, .start:hover::before {
