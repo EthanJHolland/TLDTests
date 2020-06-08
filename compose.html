@@ -1,0 +1,198 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+    <link rel="stylesheet" href="compose.css">
+    <link href="https://fonts.googleapis.com/css?family=Crimson+Text" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cormorant+Garamond" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Seaweed+Script" rel="stylesheet">
+</head>    
+    
+<body>
+    <p class="logo menu">Letterdesk</p>
+    
+    
+    <p class="logoTEXT send" onclick="showOrder()">   </p>
+    <input class="location logoTEXT" placeholder='WHERE ARE YOU WRITING FROM?' style='text-transform:uppercase'>
+    
+
+    <div class="textarea-container">
+            <textarea class="letter" id="LETTER" placeholder='write 280+ characters to send a letter' rows=20 spellcheck="false" autofocus></textarea>
+            <div class="textarea-size"></div>
+    </div>
+
+    
+    
+    
+    <div id="stats" style="word-wrap: break-word;"></div>
+    
+    <!--below this is the "get the link to send it" page-->
+    <div class="getLink-container">
+        <div class="copyalert logoTEXT" onclick="copy()">CLICK TO COPY LINK</div>
+        <div class="linkbox">
+            <div class="myurl" id="url"></div>
+        </div>
+        <p class="logoTEXT preview">PREVIEW</p>
+        <p class="logoTEXT close">CONTINUE WRITING</p>
+    </div>
+    <input class="hidden", id="hidden_input">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        
+        var output = document.getElementById("LETTER");
+        var stats = document.getElementById("stats");
+        var cursor_placement = 0;
+        
+        //parallel arrays
+        var order = []; //order of down presses
+        var down = []; //down times
+        var duration = []; //press duration times
+        var times = []; //absolute continuous times starting from 0
+        var i = 0; //currently on the ith element of all these parallel arrays
+        var y = 0; //how many characters in the textarea?
+        var difference = 0; //this is the index difference between cursor and length of letter (default is 0; the value can change but it stays constant as long as you don't reposition cursor)
+        
+        $(".logo").click(function(){
+            //when you click the logo in the corner, it links you to the main page.
+            window.open("home.html", "_self");
+        });
+        
+        document.getElementById('LETTER').onkeydown = function(e) {
+            
+            //cursor
+            var textindex = document.getElementById('LETTER').selectionStart;
+            var length = document.getElementById('LETTER').value.length;
+            //alert("current index: " + textindex + " length: " + length + " difference: " + difference);
+            
+            var p = order[i-1]; //previous keypress
+            if ((length-textindex !== difference) && p!=37 && p!=38 && p!=39 && p!=40) {
+                //accomodate for using the arrow keys (37-40) in a separate section?
+            
+                order[i] =  -textindex;  
+                down[i] = down[i-1]; //keep arrays parallel by copying previous element
+                times[i] = times[i-1];
+                i++;
+                
+                difference = length - textindex;
+            }  
+            
+            //shift
+            if (e.shiftKey == true && e.which !=16) {
+                //SHIFT is being held while pressing another key, so store 1000X the normal value of keycode
+                order[i] = e.which*1000;
+            }
+            else {
+                order[i] = e.which;
+            }
+            
+            down[i] = e.timeStamp;
+            times[i] = Math.floor((e.timeStamp - down[0]) * 1000) / 1000000;
+            
+            //press durations must be kept in the same order as other arrays to ensure it is parallel
+            //use -1 as a placeholder for now to keep parallel
+            //press durations will be updated when the key is released (onkeyup)
+            duration[i] = -1;
+            
+            i++;
+        };
+
+        document.getElementById('LETTER').onkeyup = function(e) {
+            //find most recent (and only) occurence of e.which in duration for which the value is -1;
+            
+            for (var recent = i-1; recent>=0; recent--) {
+                if ((duration[recent] === -1) && (order[recent]===e.which)) {                    
+                    //recent is now set in terms of i
+                    duration[recent] = Math.floor((e.timeStamp - down[recent]) * 1000) / 1000000;
+                }
+            }
+            
+            //count how many characters until you can send (280+)!
+            y = this.value.length;
+            document.getElementsByClassName('send')[0].innerHTML = "<span style='color: #c62f5a; font-size: 1.15em;'>" + (280-y).toString() + "+ </span><span style=''> </span>";
+            if (y>=280) {
+                document.getElementsByClassName('send')[0].innerHTML = "SEND LETTER";
+            }
+        };
+        
+        //naturally expanding input field
+        var textContainer, textareaSize, input;
+        var autoSize = function () {
+            // also can use textContent or innerText
+            textareaSize.innerHTML = input.value + '\n';
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            textContainer = document.querySelector('.textarea-container');
+            textareaSize = textContainer.querySelector('.textarea-size');
+            input = textContainer.querySelector('textarea');
+
+            autoSize();
+            input.addEventListener('input', autoSize);
+        });
+        
+        //show stats
+        function showOrder() {
+            var location = document.getElementsByClassName('location')[0].value;
+            
+            //FEED THESE 3 variables (order[], times[], location) into the reading file 
+            stats.innerHTML += "order:" + "<br>" + order + "<br><br>";
+            stats.innerHTML += "absTimes:" + "<br>" + times + "<br><br>";
+            stats.innerHTML += "location:" + "<br>" + location;
+            
+            if (y>0) {
+                //if character count is satisfied (280), then proceed.
+                //fade OUT letter writing stuff
+                $('.letter').toggleClass('sent');
+                $('.send').toggleClass('sent');
+                $('.location').toggleClass('sent');
+                var myurl = "http://letterdesk.ethanjholland.com/view/hello";
+                document.getElementsByClassName("myurl")[0].innerHTML = myurl;
+                //fade in new stuff
+                $('.getLink-container').toggleClass('sent');
+            }
+            
+            cursor_placement = document.getElementById("LETTER").selectionStart;
+            
+            
+        };
+        
+        //click on link to copy
+        function copy() {
+            document.getElementById("hidden_input").value = document.getElementById('url').innerHTML;
+            var copyText = document.getElementById("hidden_input");
+            copyText.select();
+            document.execCommand("copy");
+            //alert("Copied the text: " + copyText.value);
+            
+            //transition
+            document.getElementById('url').classList.add('copied');
+            //document.getElementsByClassName("copyalert")[0].classList.add("hidden");
+            document.getElementsByClassName("copyalert")[0].innerHTML = "SUCCESS!";
+            
+        }
+        
+        //preview -- go to link in new tab
+        $('.preview').click(function(){
+            var url = document.getElementsByClassName("myurl")[0].textContent;
+            window.open(url);
+        });
+        
+        //close -- go back to editing letter if you wish
+        $('.close').click(function(){
+            //fade out link stuff
+            $('.getLink-container').toggleClass('sent');
+            //fade in old letter writing stuff
+            $('.letter').toggleClass('sent');
+            $('.send').toggleClass('sent');
+            $('.location').toggleClass('sent');
+            
+            document.getElementById("LETTER").focus();
+            document.getElementById("LETTER").selectionStart = cursor_placement;
+        });
+        
+        
+    </script>
+
+</body>
+</html>

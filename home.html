@@ -1,0 +1,212 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+    
+    <!--The CSS file is named visualizationstyles2.css-->
+    <link rel="stylesheet" href="home.css">
+    
+    <!--these are links to Google Font CDNs-->
+    <link href="https://fonts.googleapis.com/css?family=Crimson+Text" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cormorant+Garamond" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Seaweed+Script" rel="stylesheet">
+    
+</head>
+    
+<body>
+    
+    <!--certain details appear only when you see the letter-->
+    <p class="logoTEXT pause details"><span>SPACEBAR</span></p>
+    <p class="logoTEXT fastfor details"><span>RIGHT ARROW</span></p>
+    <p class="logoTEXT location details">  </p>
+    <p class="logoTEXT time details"></p>
+    
+    <!--open letter button: to move this around relative to the page, move wrapper div-->
+    <div class="wrapper">
+        <p class="logo menu">Letterdesk</p>
+        <p class="logoTEXT about menu">WHAT IS THIS?</p>
+        <p class="logoTEXT write menu">WRITE A LETTER</p>
+    </div>
+    
+    <!--the letter itself (after you open the letter)-->
+    <div class="letter">
+        <div class=letterHEADER></div>
+        <div class="words">
+        </div>
+    </div>
+    
+    <!--certain details appear only after you see the intro letter-->
+    <p class="cornerlogo">Letterdesk</p>
+    
+    
+    <!--jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+    <script>
+        
+        //feed in data!
+        var order = [16,87,69,76,67,79,77,69,16,49,13,13,16,84,72,73,83,32,73,83,32,16,76,69,84,69,8,84,69,82,68,69,83,75,188,32,65,78,32,79,78,76,73,78,69,32,76,69,84,84,69,82,32,68,8,83,69,78,68,73,78,71,32,80,76,65,84,70,79,82,77,32,84,72,65,84,32,77,65,73,78,84,65,73,78,83,32,84,72,69,32,79,82,73,71,73,78,65,76,32,84,89,80,69,82,222,83,32,75,69,89,83,84,82,79,75,69,83,190,32,16,65,84,32,65,78,89,32,84,73,77,69,188,32,89,79,85,32,67,65,78,32,80,65,85,83,69,32,87,73,84,72,32,84,72,69,32,83,80,65,67,69,66,65,82,32,79,82,32,70,65,83,84,32,70,79,82,87,65,82,68,32,87,73,84,72,32,84,72,69,32,82,73,71,72,84,32,65,82,82,79,87,32,75,69,89,190,32,16,79,85,82,32,71,79,65,76,32,73,78,32,67,82,69,65,84,73,78,71,32,84,72,73,83,32,73,83,32,84,79,32,79,70,70,69,82,32,65,32,71,69,78,85,73,78,69,32,65,76,84,69,82,78,65,84,73,86,69,32,84,79,32,84,82,65,68,73,84,73,79,78,65,76,32,69,77,65,73,76,188,32,84,69,88,84,73,78,71,188,32,65,78,68,32,77,69,83,83,65,71,73,78,71,188,32,65,76,76,32,73,78,32,84,72,69,32,72,79,80,69,83,32,84,72,65,84,32,65,32,71,82,69,65,84,69,82,32,73,78,84,73,77,65,67,89,32,73,83,32,80,79,83,83,73,66,76,69,32,70,82,79,77,32,79,78,76,73,78,69,32,67,79,77,77,85,78,73,67,65,84,73,79,78,190,13,13,16,76,69,84,84,69,82,68,69,83,75,32,73,83,78,222,84,32,80,69,82,70,69,67,84,188,32,65,78,68,32,78,69,86,69,82,32,87,73,76,76,32,66,69,190,32,16,87,69,32,71,76,65,68,87,89,8,8,76,89,32,87,69,76,67,79,77,69,32,65,78,89,32,70,69,69,68,66,65,67,75,188,32,84,73,80,83,188,32,79,82,32,80,69,82,83,80,69,67,84,73,86,69,188,32,69,83,80,69,67,73,65,76,76,89,32,73,78,32,84,72,69,32,8,8,73,83,32,69,65,82,76,89,32,66,69,84,65,32,83,84,65,71,69,190,32,16,84,72,65,78,75,32,89,79,85,188,32,65,84,32,84,72,69,32,86,69,82,89,32,76,69,65,83,84,188,32,70,79,82,32,71,73,86,73,78,71,32,85,83,32,65,32,84,82,89,188,32,65,78,68,32,87,69,32,72,79,80,69,32,89,79,85,32,69,78,74,79,89,32,16,76,69,84,84,69,82,68,69,83,75,190,13,13,16,67,72,69,69,82,83,188,13,16,75,8,16,74,89,16,87,8,8,16,87,32,16,75,16,67,32,16,69,16,72];
+        var absTimes = [0,0.386299,0.6202,0.769799,0.8574,0.958699,1.038,1.0822,1.3535,1.4168,2.041699,2.1586,2.530499,2.586699,2.7962,2.8486,2.9621,3.049999,3.086899,3.165299,3.259599,3.449899,3.501699,3.601499,3.7304,3.952399,4.304899,4.397499,4.473199,4.560099,4.773599,4.953699,5.0301,5.166199,5.5808,5.8349,6.049399,6.1112,6.219899,6.3332,6.4349,6.5112,6.5896,6.660199,6.7631,6.8925,7.024999,7.0983,7.233,7.359,7.4574,7.539799,7.634899,7.740499,8.157099,8.212999,8.271699,8.370699,8.465299,8.5443,8.580699,8.8368,8.9484,9.070499,9.2867,9.503599,9.607499,9.8355,9.9481,10.043699,10.125899,10.247099,10.436,10.5073,10.572399,10.627499,10.7096,10.892299,11.0016,11.0803,11.1491,11.3401,11.4076,11.4977,11.560099,11.6488,11.9237,12.074599,12.1394,12.2595,12.3262,12.4725,12.631899,12.716299,12.8278,12.906899,12.947399,13.408799,13.5748,13.7984,14.116599,14.1954,14.2474,14.345,14.4021,14.687299,14.8499,14.9637,15.1014,15.184499,15.8316,16.0651,16.137,16.296099,16.391999,16.478,16.574,16.6413,16.856099,17.0134,17.1767,17.230899,17.365199,17.4605,17.883599,17.9774,18.141199,18.2527,18.540299,18.587999,18.649,18.7049,18.8225,19.5666,19.740699,19.8053,19.8598,19.9379,20.058199,20.1082,20.169499,20.2489,20.368799,20.433499,20.5429,20.6461,20.699899,20.8047,20.936999,21.003899,21.094099,21.1567,21.237999,21.290599,21.3944,21.481099,21.9235,22.578699,22.679099,22.757199,22.8039,22.8916,23.152699,23.2489,23.3075,23.4516,23.668699,24.3883,24.7231,24.850699,24.900599,24.9681,25.0296,25.771399,25.892099,25.992,26.245099,26.4314,26.5163,26.588899,26.751699,26.8675,27.058,27.116799,27.217999,27.2828,27.352799,27.410699,27.5087,27.6109,27.8689,27.978399,28.0276,28.102299,28.176899,28.249199,28.3097,28.3782,28.441,28.5792,28.6754,28.7241,28.8107,28.9078,29.0018,29.0797,29.2439,29.4001,30.467199,30.5657,30.6776,30.7869,30.8776,30.988599,31.0435,31.1312,31.2214,31.3453,31.4459,31.5249,31.589399,31.765699,31.940599,32.0056,32.063,32.149,32.2271,32.288199,32.3535,32.465799,32.6282,32.6858,32.740999,32.8277,32.9034,32.9596,33.058699,33.1424,33.346799,33.417299,33.5024,33.6979,33.776099,33.9128,33.9802,34.070199,34.1402,34.2543,34.3358,34.6372,34.702599,34.8415,35.006399,35.063099,35.1598,35.2933,35.376999,35.573799,35.6227,35.7327,35.809799,35.888999,35.972,36.0364,36.085599,36.189999,36.2905,36.334199,36.7397,36.978899,37.087199,37.1984,37.328699,37.460899,37.5103,37.6225,37.705699,37.816,37.879,37.910099,37.9657,38.078199,38.1351,38.2307,38.371799,38.426299,38.526399,38.6084,38.6827,39.1027,39.212799,39.703,39.7529,39.9303,40.1,40.1649,40.236,40.2752,40.401399,40.4745,40.6405,40.6822,40.78,40.843499,40.964099,41.036199,41.1021,41.262899,41.3237,41.417599,41.485199,41.5509,41.617399,42.129699,42.310899,42.441699,42.488799,42.6079,42.700399,43.4007,43.4904,43.510199,43.654099,43.6968,43.8034,43.8349,43.929,44.019499,44.565799,45.059799,45.3716,45.4893,45.6167,45.7096,45.745399,45.8198,45.883499,46.3763,46.7102,46.8873,47.0314,47.101499,47.147299,47.217,47.294499,47.367899,47.478399,47.665899,47.7574,47.879499,47.972,48.01,48.1206,48.1883,48.307,48.461699,48.576299,48.7261,48.8355,49.044999,49.080599,49.1811,49.3382,49.402199,49.4462,49.5188,49.6043,49.702599,49.8004,49.956,49.9893,50.0715,50.126399,50.5995,50.8843,51.0307,51.1287,51.181199,51.285199,51.3678,51.5207,51.5602,51.6307,51.7507,51.9021,51.9601,52.0391,52.096599,52.1924,52.2974,52.3502,52.4188,52.5174,53.1005,54.192799,54.3138,55.163699,55.239899,55.897799,56.0274,56.1561,56.251,56.339,56.5485,56.7028,56.7516,56.8472,56.9448,57.026899,57.114599,57.204499,57.3283,57.4182,57.4769,57.575,57.631,57.7011,57.8596,57.9489,58.046699,58.2264,58.2685,58.337199,58.567799,58.655,58.711699,58.8275,58.9582,59.1252,59.273099,59.413999,59.533999,59.953,60.1468,60.221299,60.233899,60.3684,60.437599,60.5183,60.5498,60.649199,61.619799,61.714,61.7814,61.8859,62.065299,62.2785,62.362199,62.419,62.492599,63.0819,63.419499,64.200399,64.3409,64.7982,65.1079,65.396,65.549699,65.603999,65.678799,65.7913,65.8828,65.9528,66.300199,66.4427,66.5306,66.5556,66.6987,66.7984,66.8458,66.901899,67.0487,67.1984,67.280499,67.372599,67.3812,67.473,67.615199,67.694699,67.8015,67.888,67.9761,68.4169,68.8319,69.0248,69.737499,69.860499,70.023099,70.201499,70.2792,70.346599,70.4331,70.598199,70.689199,70.7801,70.9769,71.0824,71.180099,71.2444,72.356099,72.4923,72.630299,72.6948,72.814499,72.906599,72.988299,73.131399,73.2603,73.3107,73.432299,73.5611,73.6524,73.707799,73.7724,73.8514,73.920599,74.0188,74.0762,74.2149,74.5076,74.6252,74.785699,74.836899,74.9358,75.1498,75.3861,75.4525,75.531599,75.6595,75.728899,75.8229,75.9056,75.993,76.0939,76.196599,76.297499,76.390099,76.4744,76.539199,76.5781,76.658999,77.3245,78.485499,78.5451,78.6024,78.682599,78.756399,78.803499,78.913999,79.0429,79.119299,79.1938,79.329799,79.395599,79.5178,79.582899,79.6238,79.7373,79.8047,79.8716,79.959,80.0238,80.0981,80.2063,80.2609,80.3445,80.396699,80.467399,80.544699,80.632,80.697099,81.3047,81.6765,81.9761,82.0506,82.144299,82.203399,82.4166,82.490499,82.5921,82.6542,82.7307,82.7866,83.7008,84.0196,84.231699,84.2655,84.6657,84.744299,85.1054,85.253299,85.3214,86.313399,86.4054,86.4777,86.546099,86.632999,86.6691,86.9566,87.003599,87.085899,87.1871,87.2653,87.3985,87.634699,87.7414,87.9374,88.0583,88.087199,88.514599,88.715199,88.7757,88.893699,88.970999,89.0709,89.152,89.2486,89.3116,89.433699,89.5999,89.750899,89.847399,89.924699,90.074399,90.200399,90.2784,90.3747,90.5671,91.4618,91.5904,91.9372,92.169199,92.2258,92.324899,92.484199,92.543099,92.6203,92.700199,93.7874,94.236299,94.2874,94.827099,94.9607,95.069,95.1,95.2647,95.694,95.9431,96.0767,96.6951,97.834499,98.0246,98.05,98.0945,98.171099,98.8669,98.9887,99.195199,99.20,99.2159];
+        var locationString = "Durham, NC";
+        
+        //global variables
+        var pause = false;
+        var totalString = ""; //what is outputted
+        var i=0; //what array index we are on
+        var output = document.getElementsByClassName("words")[0]; //what div the letter is typed into
+        var shift = false; //if the shift key was pressed down 1 keypress ago
+        
+        //kind of like a main method that executes everything
+        $(document).ready(function(){
+            $(".cornerlogo").click(function(){
+                //when you click the logo in the corner, it links you to the main page.
+                window.open("home.html", "_self");
+            });
+            $(".write").click(function(){
+                //when you click WRITE A LETTER, it links you to the writing page
+                window.open("writing.html", "_self");
+            });
+            $(".about").click(function(){
+                //when you click WHAT IS THIS, all this happens (it plays a letter for you)
+                document.getElementsByClassName("location")[0].innerHTML = locationString.toUpperCase();
+                $(".wrapper").fadeOut(400); //fade out the start button (using a wrapper div)
+                $("body").toggleClass("typing"); //change the body background
+                $(".menu").toggleClass("typing"); //fade out the logo and other starting menu links
+                $(".details").toggleClass("typing"); //fade in the details (i.e. the clock)
+                $(".letter").toggleClass("typing"); //allow the letter to be visible
+                $(".write").toggleClass("typing"); //fade out write letter icon;
+                
+                //start typing
+                type();
+                
+                //startClock(); //don't use for now because testing revealed people don't care
+                
+                //pause, fast forward, rewind
+                document.body.onkeydown = function(e) {
+                    if (e.which===32) {
+                        //spacebar
+                        if (pause===false) {
+                            //if currently playing, then pause
+                            pause = true;
+                        }
+                        else {
+                            //if currently paused, then play
+                            pause = false;
+                            
+                            //keep typin'
+                            type();
+                        }
+                    }
+                    if (e.which===39) {
+                        //right arrow key
+                        pause = true;
+                        
+                        //update for any spaces
+                        while (order[i]===32 && i<order.length) {
+                            updateString(i);
+                            i++;
+                        }
+                        while (order[i] !==32 && i<order.length) {
+                            updateString(i);
+                            i++;
+                        }
+                    }
+                };
+            });
+        });
+        
+        //this function takes into account the appropriate delay
+        //before calling updateString() to update the output
+        function type() {
+            var k=1;
+            if (i===0) {
+                //wait 500ms before the letter begins, to allow transitions to take effect
+                //the user must also see the spacebar and right arrow key markers appear
+                var delay = 3000;
+            }
+            else {
+                var delay = (absTimes[i]-absTimes[i-1])*1000;
+                if (delay > 2000) {delay = 2000;} //the reader doesn't want to wait forever
+            }
+            
+            //listen for a spacebar; stop typing if paused
+            if (pause===true) {
+                return;
+            }
+            
+            //use setTimeout
+            setTimeout(function () {
+               updateString(i);
+               i++;
+               if (i < order.length) {
+                   type();
+               }
+            }, delay);
+        };
+        
+        //each time this is called, one letter is added to the output (or backspaced)
+        function updateString(index) {
+            //progress (time) bar
+            document.getElementsByClassName("time")[0].innerHTML = i+1 + " / " + order.length;
+            
+            //c is a keycode
+            var c = order[index];
+            
+            //special characters (anything that is not a letter)
+            //stored in a dictionary that maps a keycode to the resulting character
+            var keyCodes ={32:" ", 188:",", 190:".", 49:"!", 191:"?",13:"<br>", 57:"(", 48:")", 222:"'", 189:"-", 186:":"};
+            
+            //letters have keycodes from [65,90]
+            if (c>=65 && c<=90) {
+                if (shift===true) {
+                    shift = false;
+                    totalString += String.fromCharCode(c); //uppercase
+                }
+                else {
+                    totalString += String.fromCharCode(c).toLowerCase(); //lowercase
+                }
+            }
+            else if (c in keyCodes) {
+                //special character (e.g. punctuation)
+                totalString += keyCodes[c];
+            }
+            else if (c===8) {
+                //backspace has keycode 8
+                totalString = totalString.slice(0,-1);
+            }
+            else if (c===16) {
+                //shift has keycode 16
+                shift = true;
+            }
+            else {
+                //for debugging only -- output the keycode if it's a character not accounted for
+                //totalString += c;
+            }
+            
+            if (index<order.length-1) {
+                //everytime you update the output with updateString(),
+                //totalString changes to the updated string + the cursor.
+                output.innerHTML = totalString + "|";
+            } 
+            else {
+                //if we're at the end of the letter, don't output the cursor, just output totalString.
+                output.innerHTML = totalString;
+                //wait 1 second before transitioning out
+                setTimeout(toEnd,1000);
+                
+            }
+            window.scrollTo(0,50000); //automatic scrolling down for long letters
+        };
+        
+        function toEnd() {
+            //toggle everything back
+            $("body").toggleClass("typing"); //back to light gray display
+            $(".cornerlogo").toggleClass("final"); //show cornerlogo
+            $(".details").toggleClass("typing"); //get rid of pause, fastfor, location, time details
+            $(".letter").toggleClass("typing"); //get rid of letter
+        }
+        
+    </script>
+    
+</body>
+</html>
