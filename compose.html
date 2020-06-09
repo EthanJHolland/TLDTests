@@ -51,31 +51,42 @@
         var times = []; //absolute continuous times starting from 0
         var i = 0; //currently on the ith element of all these parallel arrays
         var y = 0; //how many characters in the textarea?
-        var difference = 0; //this is the index difference between cursor and length of letter (default is 0; the value can change but it stays constant as long as you don't reposition cursor)
         
         $(".logo").click(function(){
             //when you click the logo in the corner, it links you to the main page.
             window.open("home.html", "_self");
         });
         
-        document.getElementById('LETTER').onkeydown = function(e) {
+        //possible events that can affect the text cursor
+        const textarea = document.getElementById('LETTER');
+        textarea.addEventListener('mouseup', checkcaret); // click
+        textarea.addEventListener('touchstart', checkcaret); // mobile click
+        
+        var pos = -1; 
+        function checkcaret(event) {
+            const newPos = textarea.selectionStart;
             
-            //cursor
-            var textindex = document.getElementById('LETTER').selectionStart;
-            var length = document.getElementById('LETTER').value.length;
-            //alert("current index: " + textindex + " length: " + length + " difference: " + difference);
-            
-            var p = order[i-1]; //previous keypress
-            if ((length-textindex !== difference) && p!=37 && p!=38 && p!=39 && p!=40) {
-                //accomodate for using the arrow keys (37-40) in a separate section?
-            
-                order[i] =  -textindex;  
-                down[i] = down[i-1]; //keep arrays parallel by copying previous element
-                times[i] = times[i-1];
+            if (newPos !== pos) { 
+                //signal a new cursor position with a negative number
+                if (newPos == 0) {
+                    order[i] =  -0.1; //0 can't be negative so use -0.1 instead
+                } else {
+                    order[i] =  -newPos;
+                }
+                
+                //fill in parallel arrays for timing
+                down[i] = event.timeStamp;
+                times[i] = Math.floor((event.timeStamp - down[0]) * 1000) / 1000000;
                 i++;
                 
-                difference = length - textindex;
-            }  
+                pos = newPos;
+                
+                //alert('start: ' + textarea.selectionStart + ' end: ' + textarea.selectionEnd);
+            }
+        }
+        
+        //keydown
+        document.getElementById('LETTER').onkeydown = function(e) { 
             
             //shift
             if (e.shiftKey == true && e.which !=16) {
@@ -98,6 +109,8 @@
         };
 
         document.getElementById('LETTER').onkeyup = function(e) {
+            showOrder();
+            
             //find most recent (and only) occurence of e.which in duration for which the value is -1;
             
             for (var recent = i-1; recent>=0; recent--) {
@@ -136,11 +149,12 @@
             var location = document.getElementsByClassName('location')[0].value;
             
             //FEED THESE 3 variables (order[], times[], location) into the reading file 
+            stats.innerHTML = "";
             stats.innerHTML += "order:" + "<br>" + order + "<br><br>";
             stats.innerHTML += "absTimes:" + "<br>" + times + "<br><br>";
             stats.innerHTML += "location:" + "<br>" + location;
             
-            if (y>0) {
+            if (y>280) {
                 //if character count is satisfied (280), then proceed.
                 //fade OUT letter writing stuff
                 $('.letter').toggleClass('sent');
