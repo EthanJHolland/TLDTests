@@ -59,34 +59,45 @@
         
         //possible events that can affect the text cursor
         const textarea = document.getElementById('LETTER');
-        textarea.addEventListener('mouseup', checkcaret); // click
-        textarea.addEventListener('touchstart', checkcaret); // mobile click
+        textarea.addEventListener('click', checkcaret); // click
+        textarea.addEventListener('touchend', checkcaret); // mobile click
         
         var pos = -1; 
         function checkcaret(event) {
-            const newPos = textarea.selectionStart;
+            if (output.selectionStart == output.selectionEnd) {
+                const newPos = textarea.selectionStart;
             
-            if (newPos !== pos) { 
-                //signal a new cursor position with a negative number
-                if (newPos == 0) {
-                    order[i] =  -0.1; //0 can't be negative so use -0.1 instead
-                } else {
-                    order[i] =  -newPos;
+                if (newPos !== pos) { 
+                    //signal a new cursor position with a negative number
+                    if (newPos == 0) {
+                        order[i] =  -0.1; //0 can't be negative so use -0.1 instead
+                    } else {
+                        order[i] =  -newPos;
+                    }
+
+                    //fill in parallel arrays for timing
+                    down[i] = event.timeStamp;
+                    times[i] = Math.floor((event.timeStamp - down[0]) * 1000) / 1000000;
+                    i++;
+                    showOrder();
+
+                    pos = newPos;
+
+                    //alert('start: ' + textarea.selectionStart + ' end: ' + textarea.selectionEnd);
                 }
-                
-                //fill in parallel arrays for timing
-                down[i] = event.timeStamp;
-                times[i] = Math.floor((event.timeStamp - down[0]) * 1000) / 1000000;
-                i++;
-                
-                pos = newPos;
-                
-                //alert('start: ' + textarea.selectionStart + ' end: ' + textarea.selectionEnd);
             }
         }
         
         //keydown
         document.getElementById('LETTER').onkeydown = function(e) { 
+            
+            //check for highlighted text
+            if (output.selectionStart != output.selectionEnd) {
+                order[i] = -((output.selectionEnd*1000000) + output.selectionStart) ; // special string to decode
+                down[i] = e.timeStamp;
+                times[i] = Math.floor((e.timeStamp - down[0]) * 1000) / 1000000;
+                i++;
+            }
             
             //shift
             if (e.shiftKey == true && e.which !=16) {
@@ -109,6 +120,13 @@
         };
 
         document.getElementById('LETTER').onkeyup = function(e) {
+            
+            if (e.which==37 || e.which==38 || e.which==39 || e.which==40) {
+                //arrow keys -> record new index
+                checkcaret(event);
+            }
+            pos = textarea.selectionStart; //update cursor position
+            
             showOrder();
             
             //find most recent (and only) occurence of e.which in duration for which the value is -1;
